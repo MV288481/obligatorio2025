@@ -43,7 +43,19 @@ En el siguiente archivo, ubicado dentro de la carpeta Inventories en el home del
     ansible_user=sysadmin
 
 
-A su vez, encontramos las variable de *ansible_user* y *ansible_host* para asignar el usuario para acceso SSH y la ip de cada host. 
+Además, el archivo define las variables *ansible_user* y *ansible_host*. Estas son vitales para establecer la conexión remota,cada variable permite especificar el usuario para ejecutar las tareas de Ansible y la ip de cada servidor.
+
+        Esto asegura la correcta comunicación entre el controlador y los nodos administrados???? 
+
+**Prueba de conexión**
+
+Se realizo una prueba de conexión con el fin de validar que los seridores son accesibles desde la maquina control(centos-srv). Para eso se utilizo el siguiente comando: 
+
+    ansible all -i inventory.ini -m ping
+
+Lo que arrojo el siguiente resultado. 
+
+![pruebadeconexión.t1](/images/pruebaconexion.png)
 
 
 
