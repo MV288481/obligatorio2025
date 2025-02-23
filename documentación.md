@@ -3,7 +3,7 @@
 
 ![LogoORT!](/images/logort.png) 
 
-|----------------------------------|-----------------------------------| **Sol Varietti - 288481** |
+|----------------------------------|-----------------------------------| **Sol Varietti - 288481 / Caetano Rodriguez - 241102** |
 
 |----------------------------------|----------------------------------| **Profesor: Enrique Verdes / Fecha de entrega: 25/02/2025** |
 
@@ -56,6 +56,7 @@ Se realizo una prueba de conexión con el fin de validar que los seridores son a
 Lo que arrojo el siguiente resultado. 
 
 ![pruebadeconexión.t1](/images/pruebaconexion.png)
+
 
 
 
