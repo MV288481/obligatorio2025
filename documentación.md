@@ -25,8 +25,22 @@ Por otro lado, actua como un respaldo centralizado, permitiendo que culquier per
 
 
 ### Estrucutra de comunicación entre maquinas virtuales
+A continuación, se describe la estructura utilizada para la conexión entre las máquinas virtuales en este entorno de trabajo.
 
-A continuación vamos a 
+El escenario cuenta con dos maquinas virtuales que se comunican a través de dos adaptadores de red configurados de la siguiente manera:
+
+- Adaptador 1 (NAT): Proporciona acceso a Internet a ambas máquinas virtuales, permitiendo la descarga de paquetes y actualizaciones necesarias para su configuración.
+  
+- Adaptador 2 (Solo anfitrión): Establece una red privada entre las máquinas virtuales, facilitando la comunicación directa sin depender de una conexión externa.
+Esta configuración permite que las máquinas interactúen entre sí de manera segura, asegurando la conectividad necesaria para la ejecución de Ansible y otras herramientas de administración remota.
+
+![diagrama](/images/diagrama.png)
+
+
+
+-----
+
+
 
 
 ## Tarea 1: Configuración del archivo de inventario 
@@ -76,11 +90,81 @@ El cual arrojo el siguiente resultado.
 ------
 
 
-### Tarea 2: Ejecutar comandos ad-hoc
+
+
+
+## Tarea 2: Ejecutar comandos ad-hoc
 
 Los comandos ad-hoc en Ansible permiten ejecutar comandos, que nos permiten interactuar con los servidores de manera directa y realizar tareas específicas sin necesidad de escribir un playbook completo. Un ejemplo de esto es el comando ejecutado anteriormente para verificar la conexión con los ervidores dentro del inventario.
 
-Dada la consigna de la tarea, se ejecutarán comandos para realizar tareas específicas como verificar el estado del sistema, instalar software y monitorear el uso del almacenamiento. Estas acciones nos permitirán comprobar la conectividad, la correcta instalación de los servicios y la disponibilidad de recursos en los servidores administrados con Ansible.
+Dada la consigna de la tarea, se ejecutarán comandos para realizar tareas específicas como verificar el estado del sistema, instalar software y monitorear el uso del almacenamiento. Estas acciones nos permitirán comprobar la conectividad, la correcta instalación de los servicios y la disponibilidad de recursos en los servidores administrados con Ansible.Estos comandos se ejecutarán desde la máquina de control utilizando la línea de comandos de Ansible y permitirán gestionar múltiples servidores simultáneamente sin requerir configuraciones adicionales.
+
+Las acciones solicitadas fueron las siguientes: 
+
+
+- Verifica el tiempo de actividad (uptime) en todos los servidores:
+El comando aplicado ejecuta el módulo `command` para obtener el tiempo de actividad de todos los servidores especificados dentro de *inventory.ini*.
+
+
+ ```bash
+ansible -i inventories/inventory.ini all -m command -a "uptime"
+ ```
+
+El resultado arrojó lo siguiente:
+
+![uptimesrv](/images/uptimeall.png)
+
+
+
+
+- Instala apache en los servidores web: 
+El comando aplicado realiza la instalación del servidor web Apache en los servidores dentro del subgrupo `webserver`. Se utiliza el módulo `dnf` y las opciones `--become` y `--ask-become-pass` para elevar los permisos del usuario y solicitar la contraseña de root.
+
+
+
+ ```bash
+ansible -i inventories/inventory.ini webserver -m dnf -a "name=httpd state=present" --become --ask-become-pass
+ ```
+
+
+
+El resultado arrojó lo siguiente:
+
+![websrvdnf](/images/httpdserweb.png)
+
+- Recupera el uso de espacio en disco de los servidores Ubuntu:
+El comando aplicado ejecuta `df -h` en los servidores `ubuntu`, proporcionando información sobre el uso del disco en un formato legible para humanos.
+
+
+ ```bash
+ansible -i inventories/inventory.ini ubuntu -m command -a "df -hT"
+ ```
+
+El resultado arrojó lo siguiente:
+
+![df-hTubutu](/images/df-hTubunu.png)
+
+        ELEGIR BIEN CUAL 
+
+![df-hubutu](/images/df-hubuntu.png)
+
+
+
+
+
+
+------
+
+
+
+
+
+## Tarea 3: Crear y ejecutar playbook de Ansible
+
+
+
+
+
 
 
 
