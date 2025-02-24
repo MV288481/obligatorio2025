@@ -1,7 +1,8 @@
 # Obligatorio Febrero 2025 - Taller de servidores Linux 
 
 
-![LogoORT!](/images/logort.png) 
+![LogoORT!](/files/images/logort.png)
+
 
 |----------------------------------|-----------------------------------| **Sol Varietti - 288481 / Caetano Rodriguez - 241102** |
 
@@ -34,7 +35,7 @@ El escenario cuenta con dos maquinas virtuales que se comunican a través de dos
 - Adaptador 2 (Solo anfitrión): Establece una red privada entre las máquinas virtuales, facilitando la comunicación directa sin depender de una conexión externa.
 Esta configuración permite que las máquinas interactúen entre sí de manera segura, asegurando la conectividad necesaria para la ejecución de Ansible y otras herramientas de administración remota.
 
-![diagrama](/images/diagrama.png)
+![diagrama](/files/images/diagrama.png)
 
 
 
@@ -83,7 +84,7 @@ Se realizo una prueba de conexión con el fin de validar que los servidores son 
 
 El cual arrojo el siguiente resultado. 
 
-![pruebadeconexión.t1](/images/pruebaconexion.png)
+![pruebadeconexión.t1](/files/images/pruebaconexion.png)
 
 
 
@@ -112,7 +113,7 @@ ansible -i inventories/inventory.ini all -m command -a "uptime"
 
 El resultado arrojó lo siguiente:
 
-![uptimesrv](/images/uptimeall.png)
+![uptimesrv](/files/images/uptimeall.png)
 
 
 
@@ -130,7 +131,7 @@ ansible -i inventories/inventory.ini webserver -m dnf -a "name=httpd state=prese
 
 El resultado arrojó lo siguiente:
 
-![websrvdnf](/images/httpdserweb.png)
+![websrvdnf](/files/images/httpdserweb.png)
 
 - Recupera el uso de espacio en disco de los servidores Ubuntu:
 El comando aplicado ejecuta `df -h` en los servidores `ubuntu`, proporcionando información sobre el uso del disco en un formato legible para humanos.
@@ -142,11 +143,11 @@ ansible -i inventories/inventory.ini ubuntu -m command -a "df -hT"
 
 El resultado arrojó lo siguiente:
 
-![df-hTubutu](/images/df-hTubunu.png)
+![df-hTubutu](/files/images/df-hTubunu.png)
 
         ELEGIR BIEN CUAL 
 
-![df-hubutu](/images/df-hubuntu.png)
+![df-hubutu](/files/images/df-hubuntu.png)
 
 
 
