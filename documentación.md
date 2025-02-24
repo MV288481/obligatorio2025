@@ -13,16 +13,27 @@
 
 ## Introducción
 
-A través de este documento presentamos el trabajo de fin de curso sobre la administración de servidores Linux mediante Ansible. El objetivo principal planteado en el obligatorio es aplicar los conocimientos adquiridos en la configuración y automatización de servidores usando Ansible, centrándose en la implementación de tareas en dos distribuciones diferentes: CentOS Stream 9 y Ubuntu 24.04.
+A lo largo de este documento presentaremos el trabajo de fin de curso del taller de Servidores Linux. El objetivo principal de este trabajo es aplicar los conocimientos adquiridos sobre la configuración y automatización de servidores utilizando Ansible. 
 
-El trabajo se compone de varias tareas que abarcan la configuración de inventarios, la ejecución de comandos ad-hoc, el desarrollo de playbooks y la documentación de los resultados. Para gestionar la labor de una mejor manera, se utilizará un repositorio GIT. 
+Para eso, se empleó la herramienta de VirtualBox para llevar a cabo la creación, gestión y virtualización de las 2 máquinas virtuales. En una de estas máquinas se instaló la versión "Server with GUI" del sistema operativo CentOS Stream 9 y en la otra se utilizó la versión "Minimal" del sistema operativo Ubuntu 24.04.  
+
+El trabajo se basa en varias tareas que abarcan la configuración de inventarios, la ejecución de comandos ad-hoc y el desarrollo de playbook. A modo de aprendizaje se realizó la documentación con formato Markdown; cabe aclarar que, al utilizar Markdown, evitamos tener conflictos con el repositorio GIT.
+
+En este trabajo se utilizó un repositorio de Git debido a la necesidad de facilitar la colaboración entre los integrantes del equipo, ya que todos pueden trabajar en conjunto sin riesgo de sobrescribir o perder información importante.
+
+Por otro lado, actua como un respaldo centralizado, permitiendo que culquier persona pueda replicar el entorno y configurar los servidores de manera automatizada mediante Ansible. Esto garantiza que las implementaciones sean reproducibles, consistentes y fáciles de mantener en el tiempo.
 
 
-### Tarea 1: Configuración del archivo de inventario 
+### Estrucutra de comunicación entre maquinas virtuales
+
+A continuación vamos a 
+
+
+## Tarea 1: Configuración del archivo de inventario 
 
 En esta primera instancia se creará un archivo de inventario en formato INI, que permitirá a Ansible administrar los diferentes servidores agrupándolos en categorías. Se definirán las credenciales y direcciones IP necesarias para acceder a estos servidores.
 
-**Archivo *inventory.ini***
+### Archivo *inventory.ini*
 
 En el siguiente archivo, ubicado dentro de la carpeta Inventories en el home del repositorio obligatorio2025, se definen los servidores administrados por Ansible. Este inventario está estructurado de acuerdo con los requisitos en la letra, creando los grupos Ubuntu y Centos , tomando en cuenta que contienen un host por grupo. Por otro lado, contamos con el grupo Linux, que contiene los subgrupos Ubuntu y Centos, y un grupo webserver, que también cuenta con el servidor Centos.
 
@@ -48,9 +59,10 @@ Además, el archivo define las variables *ansible_user* y *ansible_host*. Estas 
 
         Esto asegura la correcta comunicación entre el controlador y los nodos administrados???? 
 
-**Prueba de conexión**
+### Prueba de conexión
 
 Se realizo una prueba de conexión con el fin de validar que los servidores son accesibles desde la maquina control (centos-srv). Para eso se utilizó el siguiente comando: 
+
 ```bash
     ansible all -i inventory.ini -m ping
 ```
@@ -65,6 +77,10 @@ El cual arrojo el siguiente resultado.
 
 
 ### Tarea 2: Ejecutar comandos ad-hoc
+
+Los comandos ad-hoc en Ansible permiten ejecutar comandos, que nos permiten interactuar con los servidores de manera directa y realizar tareas específicas sin necesidad de escribir un playbook completo. Un ejemplo de esto es el comando ejecutado anteriormente para verificar la conexión con los ervidores dentro del inventario.
+
+Dada la consigna de la tarea, se ejecutarán comandos para realizar tareas específicas como verificar el estado del sistema, instalar software y monitorear el uso del almacenamiento. Estas acciones nos permitirán comprobar la conectividad, la correcta instalación de los servicios y la disponibilidad de recursos en los servidores administrados con Ansible.
 
 
 
