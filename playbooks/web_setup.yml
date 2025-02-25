@@ -41,9 +41,56 @@
       group: apache
       mode: '0644'
 
+  - name: Agregar registro al archivo host
+    ansible.builtin.lineinfile:
+      paht: /etc/hosts
+      line: "192.168.56.20 {{ virtual_server }}"
+      state: present
+    delegate_to: localhost
+    connection: local
+  
+  - name: Modificar configuracion de apache
+    ansible.builtin.lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      line: "IncludeOptional /etc/httpd/vhost.d/*.conf"
+    notify: Reiniciar apache
+  
+  - name: Existe diirectorio para configurar virtualhost
+    ansible.builtin.file:
+      path: /etc/httpd/vhost.d
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: Exisite directorio para alojar el sitio
+    ansible.builtin.file:
+      path: "/var/www/{{ virtual_server }}/html"
+      state: directory
+      owner: apache
+      group: apache
+      mode: '0755'
+
+  - name: Configuracion de virtualhost
+    ansible.builtin.template: 
+      src: ./templates/virtualhost.j2
+      dest: "/etc/httpd/vhost.d/{{ virtual_server }}.conf"
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Existe archivo indice estandar
+    ansible.builtin.template:
+      src: ./templates/index.j2
+      dest: "/var/www/{{ virtual_server }}/html/index.html"
+      owner: apache
+      group: apache
+      mode: '0644'
+
+
   handlers:
 
-  - name: Iniciar servicio apache (httpd)
+  - name: Reiniciar apache
     ansible.builtin.systemd_service:
       name: httpd
-      state: reloaded
+      state: restarted
