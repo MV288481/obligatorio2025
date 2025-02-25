@@ -31,13 +31,6 @@
       enabled: true
       permanent: true
       immediate: true
-    loop: [http,https,]
+    loop: [http,https]
 
 
-  handlers: 
-
-  - name: Reiniciar
-    ansible.buitlin.reboot: 
-    msg: "Reiniciando sistema"
-
-    
