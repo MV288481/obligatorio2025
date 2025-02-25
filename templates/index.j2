@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Ejemplo</title>
+</head>
+<body>
+    <div>
+        <h1>Página de Ejemplo</h1>
+        <p>El hostname es: <span>{{ ansible_hostname }}</span></p>
+        <p>El día es: <span>{{ ansible_date_time['date'] }}</span></p>
+        <p>La hora es: <span>{{ ansible_date_time['time'] }}</span></p>
+        <p>La IP es: <span>{{ ansible_all_ipv4_addresses[1] }}</span></p>
+    </div>
+</body>
+</html>

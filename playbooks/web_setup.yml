@@ -1,0 +1,43 @@
+---
+- name: Despliegue del servidor Apache
+  hosts: webserver
+  become: true
+  
+  tasks:
+
+  - name: Instalar apache (httpd) en Red Hat
+    ansible.builtin.dnf: 
+      name: "httpd"
+      state: present
+    when: ansible_os_family == "RedHat"
+    notify: Reiniciar
+   
+  - name: Instalar apache (httpd) en Debian
+    ansible.builtin.apt:
+      name: "httpd"
+      state: present
+    when: ansible_os_family == "Debian
+    notify: Reiniciar
+
+  - name: Iniciar servicio apache (httpd)
+    ansible.builtin.systemd_service: 
+      name: httpd
+      state: started
+      enable: true
+
+  - name: Agregar servicio (httpd) en el firewalld
+    ansilbe.posix.firewalld:
+      service: "{{ item }}"
+      enabled: true
+      permanent: true
+      immediate: true
+    loop: [http,https,]
+
+
+  handlers: 
+
+  - name: Reiniciar
+    ansible.buitlin.reboot: 
+    msg: "Reiniciando sistema"
+
+    
