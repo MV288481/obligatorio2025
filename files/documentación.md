@@ -151,21 +151,13 @@ El resultado arrojó lo siguiente:
 
 
 
-
-
-
-------
-
-
-
-
 ------
 
 
 
 
 
-### *Tarea 3: Creación y Ejecución de Playbooks*
+## *Tarea 3: Creación y Ejecución de Playbooks*
 
 #### *Descripción*
 
@@ -220,7 +212,104 @@ Después de la ejecución, se verificará:
 
 Se desarrollarán dos playbooks para automatizar la configuración de servidores. A continuación se encuentran los playbook desarollados. 
 
-#### \\*Playbook \\*\\
+``` python
+---
+- name: Despliegue del servidor Apache
+  hosts: centos
+  become: true
+
+  tasks:
+
+  - name: Instalar apache (httpd) en Red Hat
+    ansible.builtin.dnf:
+      name: "httpd"
+      state: present
+    when: ansible_os_family == "RedHat"
+
+  - name: Instalar apache (httpd) en Debian
+    ansible.builtin.apt:
+      name: "httpd"
+      state: present
+    when: ansible_os_family == "Debian"
+    
+  - name: Iniciar servicio apache (httpd)
+    ansible.builtin.systemd_service:
+      name: httpd
+      state: started
+      enabled: true
+
+  - name: Agregar servicio (httpd) en el firewalld
+    ansible.posix.firewalld:
+      service: "{{ item }}"
+      permanent: true
+      immediate: true
+      state: enabled
+    loop:
+      - http
+      - https
+
+  - name: Pagina indice generada por template
+    ansible.builtin.template:
+      src: ../templates/index.j2
+      dest: /var/www/html/index.html
+      owner: apache
+      group: apache
+      mode: '0644'
+
+  - name: Agregar registro al archivo host
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: "192.168.56.20 {{ virtual_server }}"
+      state: present
+    delegate_to: localhost
+    connection: local
+  
+  - name: Modificar configuracion de apache
+    ansible.builtin.lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      line: "IncludeOptional /etc/httpd/vhost.d/*.conf"
+    notify: Reiniciar apache
+  
+  - name: Existe diirectorio para configurar virtualhost
+    ansible.builtin.file:
+      path: /etc/httpd/vhost.d
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: Exisite directorio para alojar el sitio
+    ansible.builtin.file:
+      path: "/var/www/{{ virtual_server }}/html"
+      state: directory
+      owner: apache
+      group: apache
+      mode: '0755'
+
+  - name: Configuracion de virtualhost
+    ansible.builtin.template: 
+      src: ../templates/virtualhost.j2
+      dest: "/etc/httpd/vhost.d/{{ virtual_server }}.conf"
+      owner: apache
+      group: apache
+      mode: '0644'
+
+  - name: Existe archivo indice estandar
+    ansible.builtin.template:
+      src: ../templates/index.j2
+      dest: "/var/www/{{ virtual_server }}/html/index.html"
+      owner: apache
+      group: apache
+      mode: '0644'
+
+
+  handlers:
+
+  - name: Reiniciar apache
+    ansible.builtin.systemd:
+      name: httpd
+      state: restarted
+```
 
 Este playbook automatiza la configuración de un servidor web en CentOS:
 
@@ -230,16 +319,43 @@ Este playbook automatiza la configuración de un servidor web en CentOS:
 - Despliega un archivo index.html que muestra el hostname y la IP
 - Usa handlers para reiniciar Apache si es necesario
 
-#### \\*Playbook \\*\\
-
 Este playbook refuerza la seguridad en servidores Ubuntu:
 
 - Activa UFW bloqueando tráfico entrante excepto SSH
 - Asegura que la clave pública del usuario sysadmin está configurada
 - Restringe el acceso SSH solo a autenticación por clave pública
+ 
+ ``` python
+---
+- name: Aplicar medidas de seguridad en Ubuntu
+  hosts: ubuntu
+  become: true
+
+  tasks:
+  - name: Instalar UFW
+    apt:
+      name: ufw
+      state: present
+
+  - name: Configurar reglas de UFW
+    ufw:
+      state: enabled
+      policy: deny
+
+  - name: Permitir SSH en UFW
+    ufw:
+      rule: allow
+      port: ssh
+      proto: tcp
+```
+
 
 ---
 
-## 7. Conclusión
+## Conclusión
 
 Este trabajo permitió poner en práctica los conocimientos de Ansible para la administración de servidores, mejorando en la gestión de configuraciones y automatización de tareas.
+
+A su vez, nos ayudo a expandir nuestro conocimiento en varias areas como por ejemplo el uso de repositorios GIT, la documentación repositorios, entre otros. 
+
+# 
