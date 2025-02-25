@@ -159,26 +159,87 @@ El resultado arrojó lo siguiente:
 
 
 
-
-## Tarea 3: Crear y ejecutar playbook de Ansible
-
+------
 
 
 
 
 
+### *Tarea 3: Creación y Ejecución de Playbooks*
+
+#### *Descripción*
+
+En esta tarea se desarrollarán dos playbooks que automatizarán la configuración de los servidores administrados con Ansible.
+
+El primer playbook se enfocará en la configuración de un servidor web sobre CentOS, asegurando la instalación y configuración de Apache, la habilitación de tráfico HTTP y la implementación de una página web personalizada. 
+
+El segundo playbook implementará medidas de seguridad en los servidores Ubuntu, como la restricción de accesos SSH y la configuración de firewall para proteger la infraestructura.
+
+---
+
+#### *Playbook web_setup.yml*
+
+Este playbook tiene como objetivo la instalación y configuración de un servidor web en la máquina CentOS definida en el inventario. Las tareas que se ejecutarán incluyen:
+
+- Instalación del servidor Apache.
+- Creación y configuración de un VirtualHost para alojar un sitio web.
+- Configuración del firewall para permitir tráfico HTTP (puerto 80).
+- Despliegue de un archivo index.html en el directorio web.
+- Implementación de un handler para reiniciar Apache en caso de cambios en la configuración.
+
+---
+
+#### *Playbook hardening.yml*
+
+Este segundo playbook se ejecutará en los servidores Ubuntu y aplicará medidas de seguridad para fortalecer el sistema:
+
+- Habilitación y configuración de ufw para permitir solo tráfico SSH.
+- Asegurar que la clave pública del usuario sysadmin esté en el servidor.
+- Configuración de SSH para deshabilitar el acceso con contraseña y permitir solo autenticación por clave pública.
+
+---
+
+#### *Ejecución y Validación*
+
+Para ejecutar los playbooks en sus respectivos servidores, se utilizan los siguientes comandos:
+
+sh
+ansible-playbook -i inventory.ini web_setup.yml
+ansible-playbook -i inventory.ini hardening.yml
 
 
+Después de la ejecución, se verificará:
+- Que Apache esté instalado y el sitio web sea accesible.
+- Que ufw esté activo y solo permita conexiones SSH.
+- Que el acceso SSH solo sea posible mediante clave pública.
 
 
+---
 
+#### *Descripción*
 
+Se desarrollarán dos playbooks para automatizar la configuración de servidores. A continuación se encuentran los playbook desarollados. 
 
+#### \\*Playbook \\*\\
 
+Este playbook automatiza la configuración de un servidor web en CentOS:
 
+- Instala Apache
+- Configura un VirtualHost
+- Permite tráfico HTTP en el firewall
+- Despliega un archivo index.html que muestra el hostname y la IP
+- Usa handlers para reiniciar Apache si es necesario
 
+#### \\*Playbook \\*\\
 
+Este playbook refuerza la seguridad en servidores Ubuntu:
 
+- Activa UFW bloqueando tráfico entrante excepto SSH
+- Asegura que la clave pública del usuario sysadmin está configurada
+- Restringe el acceso SSH solo a autenticación por clave pública
 
+---
 
+## 7. Conclusión
 
+Este trabajo permitió poner en práctica los conocimientos de Ansible para la administración de servidores, mejorando en la gestión de configuraciones y automatización de tareas.
