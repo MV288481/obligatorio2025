@@ -1,0 +1,21 @@
+---
+- name: Aplicar medidas de seguridad en Ubuntu
+  hosts: ubuntu
+  become: true
+
+  tasks:
+  - name: Instalar UFW
+    apt:
+      name: ufw
+      state: present
+
+  - name: Configurar reglas de UFW
+    ufw:
+      state: enabled
+      policy: deny
+
+  - name: Permitir SSH en UFW
+    ufw:
+      rule: allow
+      port: ssh
+      proto: tcp

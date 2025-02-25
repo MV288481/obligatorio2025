@@ -1,0 +1,20 @@
+---
+- name: Configuración completa de servidores
+  hosts: linux
+  become: true
+  roles:
+    - common
+
+- name: Configuración de servidores web
+  hosts: webserver
+  become: true
+  vars:
+    virtual_server: "www.ejemplo.com.uy"
+  roles:
+    - webserver
+
+- name: Aplicar medidas de seguridad en Ubuntu
+  hosts: ubuntu
+  become: true
+  roles:
+    - hardening

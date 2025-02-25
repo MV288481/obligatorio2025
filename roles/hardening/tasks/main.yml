@@ -1,0 +1,42 @@
+---
+- name: Instalar UFW
+  apt:
+    name: ufw
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Configurar reglas de UFW
+  ufw:
+    state: enabled
+    policy: deny
+  when: ansible_os_family == "Debian"
+
+- name: Permitir SSH en UFW
+  ufw:
+    rule: allow
+    port: ssh
+    proto: tcp
+  when: ansible_os_family == "Debian"
+
+- name: Crear directorio .ssh para usuario sysadmin
+  file:
+    path: "/home/sysadmin/.ssh"
+    state: directory
+    owner: sysadmin
+    group: sysadmin
+    mode: '0700'
+
+- name: Copiar clave pública SSH
+  copy:
+    src: authorized_keys
+    dest: "/home/sysadmin/.ssh/authorized_keys"
+    owner: sysadmin
+    group: sysadmin
+    mode: '0600'
+
+- name: Configurar SSH para autenticación por clave
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: Reiniciar SSH

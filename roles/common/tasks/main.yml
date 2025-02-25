@@ -1,0 +1,13 @@
+---
+- name: Actualizar caché de paquetes
+  package:
+    update_cache: yes
+  when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
+
+- name: Instalar paquetes comunes
+  package:
+    name:
+      - vim
+      - htop
+      - net-tools
+    state: present
