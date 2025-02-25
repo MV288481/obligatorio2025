@@ -75,8 +75,8 @@
     ansible.builtin.template: 
       src: ../templates/virtualhost.j2
       dest: "/etc/httpd/vhost.d/{{ virtual_server }}.conf"
-      owner: root
-      group: root
+      owner: apache
+      group: apache
       mode: '0644'
 
   - name: Existe archivo indice estandar
