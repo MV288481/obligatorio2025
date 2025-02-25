@@ -26,11 +26,21 @@
       enable: true
 
   - name: Agregar servicio (httpd) en el firewalld
-    ansilbe.posix.firewalld:
+    ansible.posix.firewalld:
       service: "{{ item }}"
       enabled: true
       permanent: true
       immediate: true
     loop: [http,https]
+
+  - name: Pagina indice generada por template
+    ansible.builtin.template:
+      src: ./templates/index.j2
+      dest: /var/www/html/index.html
+      owner: apache
+      group: apache
+      mode: '0644'
+
+
 
 
