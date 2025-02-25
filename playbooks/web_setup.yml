@@ -43,7 +43,7 @@
 
   - name: Agregar registro al archivo host
     ansible.builtin.lineinfile:
-      paht: /etc/hosts
+      path: /etc/hosts
       line: "192.168.56.20 {{ virtual_server }}"
       state: present
     delegate_to: localhost
@@ -91,6 +91,6 @@
   handlers:
 
   - name: Reiniciar apache
-    ansible.builtin.systemd_service:
+    ansible.builtin.systemd:
       name: httpd
       state: restarted
