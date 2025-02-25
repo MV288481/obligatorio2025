@@ -1,0 +1,19 @@
+1. ¿Qué es Ansible y por qué es "sin agente"?
+
+Ansible es una herramienta de automatización de configuración y gestión de servidores. Permite administrar sistemas de manera eficiente mediante playbooks escritos en YAML que especifican las acciones a realizar en los servidores administrados.
+Es sin agente porque no necesita software adicional en los servidores gestionados. En su lugar, usa SSH  o WinRM para ejecutar tareas remotas, lo que minimiza los requisitos de mantenimiento.
+
+2. Diferencias entre comandos ad-hoc y playbooks
+
+En Ansible, existen dos métodos principales para ejecutar tareas de automatización: los comandos ad-hoc y los playbooks. Ambos permiten gestionar sistemas de manera remota.
+Comandos ad-hoc: Son instrucciones de Ansible ejecutadas en línea de comandos para tareas rápidas sin necesidad de crear un archivo.
+Ejemplo: ansible all -m ping
+Playbooks: Son archivos YAML que definen configuraciones y tareas automatizadas, permitiendo su reutilización y control.
+Ejemplo: Un playbook que instala Apache en varios servidores.
+
+3. Importancia de la idempotencia
+La idempotencia en Ansible significa que ejecutar un playbook varias veces no cambia el estado del sistema si ya está configurado correctamente. Es importante porque reduce errores y tiempo de ejecución, evita cambios innecesarios y asegura estabilidad en la configuración.
+
+4. Uso de handlers
+Los handlers en Ansible son tareas especiales que solo se ejecutan si un cambio ocurre en otra tarea. Se usan para acciones como reiniciar un servicio después de modificar su configuración. 
+Por ejemplo, si un playbook actualiza el archivo de configuración de un servidor web, un handler puede reiniciar el servicio para aplicar los cambios.

@@ -358,4 +358,20 @@ Este trabajo permitió poner en práctica los conocimientos de Ansible para la a
 
 A su vez, nos ayudo a expandir nuestro conocimiento en varias areas como por ejemplo el uso de repositorios GIT, la documentación repositorios, entre otros. 
 
-# 
+
+## Bibliografia
+
+A lo largo de este proyecto se utilizaron varias fuentes para obtener ejemplos de uso y aplicación de las distintas herramientas. Se baso en el trabajo en clase y en las grabaciones de estas. 
+
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/dnf_module.html  - Se utilizo en la tarea 2 para realizar la instalacion  apache/httpd en centos/webserver
+
+https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-8-es   - Se despejaron dudas sobre apache
+
+https://oracle-base.com/articles/misc/ansible-ad-hoc-commands     Se utilizo en la tarea 2 para realizar la instalacion  apache/httpd en centos/webserver
+
+https://medium.com/@saurabhdahibhate50/mastering-ad-hoc-commands-in-ansible-a-comprehensive-guide-506e81dcd9b2   - Guia sobre comandos ad-hoc
+
+https://www.markdownguide.org/basic-syntax/ - Se utilizo a la hora de escribir en el fortmato Markdown
+
+
+
