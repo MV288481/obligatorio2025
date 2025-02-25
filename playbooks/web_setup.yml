@@ -10,15 +10,13 @@
       name: "httpd"
       state: present
     when: ansible_os_family == "RedHat"
-    notify: Reiniciar
 
   - name: Instalar apache (httpd) en Debian
     ansible.builtin.apt:
       name: "httpd"
       state: present
     when: ansible_os_family == "Debian"
-    notify: Reiniciar
-
+    
   - name: Iniciar servicio apache (httpd)
     ansible.builtin.systemd_service:
       name: httpd
@@ -42,3 +40,10 @@
       owner: apache
       group: apache
       mode: '0644'
+
+  handlers:
+
+  - name: Iniciar servicio apache (httpd)
+    ansible.builtin.systemd_service:
+      name: httpd
+      state: reloaded
