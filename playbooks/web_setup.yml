@@ -2,28 +2,28 @@
 - name: Despliegue del servidor Apache
   hosts: webserver
   become: true
-  
+
   tasks:
 
   - name: Instalar apache (httpd) en Red Hat
-    ansible.builtin.dnf: 
+    ansible.builtin.dnf:
       name: "httpd"
       state: present
     when: ansible_os_family == "RedHat"
     notify: Reiniciar
-   
+
   - name: Instalar apache (httpd) en Debian
     ansible.builtin.apt:
       name: "httpd"
       state: present
-    when: ansible_os_family == "Debian
+    when: ansible_os_family == "Debian"
     notify: Reiniciar
 
   - name: Iniciar servicio apache (httpd)
-    ansible.builtin.systemd_service: 
+    ansible.builtin.systemd_service:
       name: httpd
       state: started
-      enable: true
+      enabled: true
 
   - name: Agregar servicio (httpd) en el firewalld
     ansible.posix.firewalld:
@@ -31,6 +31,7 @@
       enabled: true
       permanent: true
       immediate: true
+      state: enabled
     loop: [http,https]
 
   - name: Pagina indice generada por template
