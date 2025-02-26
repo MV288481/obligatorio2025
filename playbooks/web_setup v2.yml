@@ -1,0 +1,121 @@
+---
+- name: Despliegue del servidor Apache
+  hosts: webserver
+  become: true
+  vars:
+    virtual_server: "www.ejemplo.com.uy"
+
+  tasks:
+  - name: Instalar apache en Red Hat
+    ansible.builtin.dnf:
+      name: "httpd"
+      state: present
+    when: ansible_os_family == "RedHat"
+
+  - name: Instalar apache en Debian
+    ansible.builtin.apt:
+      name: "apache2"
+      state: present
+    when: ansible_os_family == "Debian"
+    
+  - name: Definir nombre del servicio apache según distribución
+    set_fact:
+      apache_service: "{{ 'httpd' if ansible_os_family == 'RedHat' else 'apache2' }}"
+      apache_user: "{{ 'apache' if ansible_os_family == 'RedHat' else 'www-data' }}"
+      apache_config_dir: "{{ '/etc/httpd/conf' if ansible_os_family == 'RedHat' else '/etc/apache2' }}"
+      apache_vhosts_dir: "{{ '/etc/httpd/vhost.d' if ansible_os_family == 'RedHat' else '/etc/apache2/sites-available' }}"
+      apache_html_dir: "/var/www/html"
+
+  - name: Iniciar servicio apache
+    ansible.builtin.systemd_service:
+      name: "{{ apache_service }}"
+      state: started
+      enabled: true
+
+  - name: Agregar servicio apache en el firewalld (CentOS)
+    ansible.posix.firewalld:
+      service: "{{ item }}"
+      permanent: true
+      immediate: true
+      state: enabled
+    loop:
+      - http
+      - https
+    when: ansible_os_family == "RedHat"
+
+  - name: Permitir tráfico HTTP/HTTPS en UFW (Ubuntu)
+    ufw:
+      rule: allow
+      port: "{{ item }}"
+      proto: tcp
+    loop:
+      - "80"
+      - "443"
+    when: ansible_os_family == "Debian"
+
+  - name: Página índice principal
+    ansible.builtin.template:
+      src: ../templates/index.j2
+      dest: "{{ apache_html_dir }}/index.html"
+      owner: "{{ apache_user }}"
+      group: "{{ apache_user }}"
+      mode: '0644'
+
+  - name: Agregar registro al archivo hosts
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: "{{ ansible_default_ipv4.address }} {{ virtual_server }}"
+      state: present
+  
+  - name: Crear directorio para virtualhost
+    ansible.builtin.file:
+      path: "{{ apache_vhosts_dir }}"
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+    when: ansible_os_family == "RedHat"
+
+  - name: Crear directorio para alojar el sitio
+    ansible.builtin.file:
+      path: "/var/www/{{ virtual_server }}/html"
+      state: directory
+      owner: "{{ apache_user }}"
+      group: "{{ apache_user }}"
+      mode: '0755'
+
+  - name: Configuración de virtualhost
+    ansible.builtin.template: 
+      src: ../templates/virtualhost.j2
+      dest: "{{ apache_vhosts_dir }}/{{ virtual_server }}.conf"
+      owner: root
+      group: root
+      mode: '0644'
+    notify: Reiniciar apache
+
+  - name: Habilitar sitio en Apache (Ubuntu)
+    command: a2ensite {{ virtual_server }}.conf
+    when: ansible_os_family == "Debian"
+    notify: Reiniciar apache
+
+  - name: Modificar configuración de apache (CentOS)
+    ansible.builtin.lineinfile:
+      path: "{{ apache_config_dir }}/httpd.conf"
+      line: "IncludeOptional {{ apache_vhosts_dir }}/*.conf"
+      state: present
+    when: ansible_os_family == "RedHat"
+    notify: Reiniciar apache
+
+  - name: Página índice para virtualhost
+    ansible.builtin.template:
+      src: ../templates/index.j2
+      dest: "/var/www/{{ virtual_server }}/html/index.html"
+      owner: "{{ apache_user }}"
+      group: "{{ apache_user }}"
+      mode: '0644'
+
+  handlers:
+  - name: Reiniciar apache
+    ansible.builtin.systemd_service:
+      name: "{{ apache_service }}"
+      state: restarted
